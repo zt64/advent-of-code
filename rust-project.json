@@ -1,0 +1,10 @@
+{
+    "sysroot_src": "/home/nick/.local/share/rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library",
+    "crates": [
+        {
+            "root_module": "day-07-rust.rs",
+            "edition": "2021",
+            "deps": []
+        }
+    ]
+}
