@@ -35,7 +35,7 @@ day08:
 
 # Bash
 day09:
-    bash day-09-bash.sh
+    julia day-09-julia.jl
 
 # C++
 day10:
