@@ -31,12 +31,12 @@ println("Part 1: $total")
 
 total = 0
 
-for arr in lines
-    local diffs = reverse(diffs_of_arr(arr))
+for arr in map(reverse, lines)
+    local diffs = diffs_of_arr(arr)
     local num = 0
 
     while true
-        _diffs = reverse(diffs_of_arr(diffs))
+        _diffs = diffs_of_arr(diffs)
         if all(diff -> diff == 0, _diffs)
             num += last(diffs) + last(arr)
             break
