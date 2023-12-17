@@ -2,4 +2,5 @@
 *.exe
 *.class
 *.out
+rust-project.json
 input/

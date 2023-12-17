@@ -3,44 +3,68 @@ default:
 
 # Python
 day01 PART:
-    python3 day-01-python.py {{PART}}
+    python3 d01.py {{PART}}
 
 # C#
 day02 PART:
-    csc day-02-csharp.cs && mono day-02-csharp.exe {{PART}}
+    csc d02.cs && mono d02.exe {{PART}}
 
 # Go
 day03 PART:
-    go run ./day-03-go.go {{PART}}
+    go run ./d03.go {{PART}}
 
 # D
 day04:
-    rdmd day-04-dlang.d
+    rdmd d04.d
 
 # Crystal
 day05:
-    crystal day-05-crystal.cr
+    crystal d05.cr
 
 # JavaScript
 day06:
-    node day-06-javascript.js
+    node d06.js
 
 # Rust
 day07:
-    ./day-07-rust.rs
+    ./d07.rs
 
 # Java
 day08:
-    javac day-08-java.java && java Day08
+    javac d08.java && java Day08
 
-# Bash
+# Julia
 day09:
-    julia day-09-julia.jl
+    julia d09.jl
 
 # C++
 day10:
-    g++ day-10-cpp.cpp && ./a.out
+    g++ d10.cpp && ./a.out
 
-# Julia
+# Zig
 day11:
-    julia day-11-julia.jl
+    zig run d11.zig
+
+# V
+day12:
+    v run d12.v
+
+# Gleam
+day13:
+    gleam run d13.gleam
+
+# Elixir
+day14:
+    elixirc d14.ex
+
+# Nim
+day15:
+    nim c -r --verbosity:0 d15.nim
+
+# Fortran
+day16:
+    gfortran d16.f90 -o /tmp/d16 && /tmp/d16
+
+# Swift
+day17:
+    swift d17.swift
