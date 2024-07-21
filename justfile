@@ -68,3 +68,19 @@ day16:
 # Swift
 day17:
     swift d17.swift
+
+# C
+day18:
+    gcc d18.c --output=/tmp/d18  && /tmp/d18
+
+# Kotlin
+day19:
+    kotlinc d19.kt -include-runtime -d /tmp/d19.jar && java -jar /tmp/d19.jar
+
+# TypeScript
+day20:
+    ts-node d20.ts
+
+# R
+day21:
+    Rscript d21.r

@@ -1,6 +1,9 @@
 .idea
+.vscode
 *.exe
 *.class
 *.out
 rust-project.json
 input/
+node_modules/
+META-INF/
