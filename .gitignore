@@ -1,0 +1,7 @@
+.idea
+.code
+.kotlin
+.gradle
+build
+
+src/main/resources/*.txt
