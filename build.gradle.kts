@@ -6,3 +6,9 @@ plugins {
 kotlin {
     jvmToolchain(21)
 }
+
+dependencies {
+    implementation(libs.coroutines)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+}

@@ -1,8 +1,9 @@
-import kotlin.concurrent.thread
+
+import kotlinx.coroutines.*
 import kotlin.time.measureTimedValue
 
-fun main() {
-    val day = Day01
+fun main(args: Array<String>) {
+    val day = args.firstOrNull()?.toIntOrNull()?.let { TODO() } ?: Day02
 
     printSolution(day)
 }
@@ -10,23 +11,31 @@ fun main() {
 fun printSolution(day: Day) {
     println("Day ${day.number}")
 
-    val (part1, part1Duration) = measureTimedValue(day::part1)
-    println("Part 1: (took $part1Duration) $part1")
+    runBlocking {
+        val part1Job = launch {
+            val progressJob = launchProgressIndicator("Processing Part 1")
+            val (part1, part1Duration) = measureTimedValue { day.part1() }
+            progressJob.cancel()
+            println("\rPart 1: (took $part1Duration) $part1")
+        }
+        part1Job.join()
 
-    val (part2, part2Duration) = measureTimedValue(day::part2)
-    println("Part 2: (took $part2Duration) $part2")
+        val part2Job = launch {
+            val progressJob = launchProgressIndicator("Processing Part 2")
+            val (part2, part2Duration) = measureTimedValue { day.part2() }
+            progressJob.cancel()
+            println("\rPart 2: (took $part2Duration) $part2")
+        }
+        part2Job.join()
+    }
 }
 
-fun printProgressIndicator(message: String): Thread {
+fun CoroutineScope.launchProgressIndicator(message: String) = launch {
     val progressChars = arrayOf("|", "/", "-", "\\")
     var index = 0
-    val progressThread = thread {
-        while (!Thread.currentThread().isInterrupted) {
-            print("\r$message ${progressChars[index % progressChars.size]}")
-            index++
-            Thread.sleep(100)
-        }
+    while (isActive) {
+        print("\r$message ${progressChars[index % progressChars.size]}")
+        index++
+        delay(100)
     }
-    Runtime.getRuntime().addShutdownHook(Thread(progressThread::interrupt))
-    return progressThread
 }
