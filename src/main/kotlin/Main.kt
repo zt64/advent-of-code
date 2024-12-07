@@ -10,7 +10,7 @@ val days = listOf<Day>(
     Day04,
     Day05,
     Day06,
-    // Day07,
+    Day07,
     // Day08,
     // Day09,
     // Day10,
