@@ -1,4 +1,4 @@
-data class Point(val x: Int, val y: Int)
+private data class Point(val x: Int, val y: Int)
 
 object Day06 : Day(6) {
     private val grid = input.to2DArray<Char>()
@@ -8,7 +8,7 @@ object Day06 : Day(6) {
     }
 
     // counts the number of points visited or returns -1 if the path is a loop
-    private fun List<List<Char>>.countPoints(): Int {
+    private fun Array<Array<Char>>.countPoints(): Int {
         var position = findStart()
         var dir = Direction.UP
         val visited = mutableSetOf(position to dir)
@@ -43,7 +43,7 @@ object Day06 : Day(6) {
 
     override fun part2(): Any {
         var paths = 0
-        val mutableGrid = grid.map { it.toMutableList() }
+        val mutableGrid = grid
 
         grid.forEach2D { c, row, col ->
             if (c != '#') {
