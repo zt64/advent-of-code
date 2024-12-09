@@ -1,9 +1,10 @@
 
+import day.*
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.time.measureTimedValue
 
-val days = listOf<Day>(
+private val days = listOf<Day>(
     Day01,
     Day02,
     Day03,
@@ -12,7 +13,7 @@ val days = listOf<Day>(
     Day06,
     Day07,
     Day08,
-    // Day09,
+    Day09,
     // Day10,
     // Day11,
     // Day12,
@@ -34,32 +35,32 @@ val days = listOf<Day>(
 fun main(args: Array<String>) {
     val calendar = Calendar.getInstance()
 
-    val day = if (calendar.get(Calendar.YEAR) == 2024) {
+    val dayIndex = if (calendar.get(Calendar.YEAR) == 2024) {
         calendar.get(Calendar.DAY_OF_MONTH)
     } else {
         args.firstOrNull()?.toIntOrNull()
-    } ?: error("Day not found")
+    }?.takeIf { i ->
+        i in 1..days.size
+    } ?: error("Invalid day")
 
-    printSolution(days[day - 1])
-}
+    val day = days.getOrNull(dayIndex - 1) ?: error("day.Day not found")
 
-private fun printSolution(day: Day) {
     println("Day ${day.number}")
 
-    runBlocking {
+    runBlocking(Dispatchers.IO) {
         val part1Job = launch {
-            val progressJob = launchProgressIndicator("Processing Part 1")
+            val progressJob = launchProgressIndicator("Processing part 1")
             val (part1, part1Duration) = measureTimedValue(day::part1)
             progressJob.cancel()
-            println("\rPart 1: (took $part1Duration) $part1")
+            println("\r* Part 1 (took ${part1Duration}): $part1")
         }
         part1Job.join()
 
         val part2Job = launch {
-            val progressJob = launchProgressIndicator("Processing Part 2")
+            val progressJob = launchProgressIndicator("Processing part 2")
             val (part2, part2Duration) = measureTimedValue(day::part2)
             progressJob.cancel()
-            println("\rPart 2: (took $part2Duration) $part2")
+            println("\r* Part 2 (took ${part2Duration}): $part2")
         }
         part2Job.join()
     }
