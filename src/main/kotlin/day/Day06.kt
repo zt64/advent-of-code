@@ -1,3 +1,8 @@
+package day
+
+import util.forEach2D
+import util.to2DArray
+
 private data class Point(val x: Int, val y: Int)
 
 object Day06 : Day(6) {

@@ -1,3 +1,11 @@
+package day
+
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import util.contains
+import util.forEach2D
+import util.to2DArray
+
 object Day08 : Day(8) {
     private val grid = input.to2DArray<Char>()
 

@@ -1,3 +1,5 @@
+package day
+
 object Day03 : Day(3) {
     private fun String.calculate(): Int {
         val regex = """mul\((\d+),(\d+)\)""".toRegex()

@@ -1,3 +1,5 @@
+package day
+
 object Day05 : Day(5) {
     private val sections = input.split("\n\n")
     private val rules = sections[0].lines().map { it.split("|").let { it[0].toInt() to it[1].toInt() } }

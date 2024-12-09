@@ -1,3 +1,5 @@
+package day
+
 object Day04 : Day(4) {
     private const val MATCH = "XMAS"
     private const val MAGIC = 3

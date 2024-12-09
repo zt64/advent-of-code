@@ -1,3 +1,5 @@
+package day
+
 private typealias Equation = Pair<Long, List<Long>>
 
 object Day07 : Day(7) {

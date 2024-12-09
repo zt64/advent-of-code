@@ -1,3 +1,5 @@
+package day
+
 import kotlin.math.absoluteValue
 
 object Day02 : Day(2) {

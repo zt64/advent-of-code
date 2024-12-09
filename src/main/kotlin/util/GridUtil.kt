@@ -1,3 +1,5 @@
+package util
+
 typealias Grid<T> = Array<Array<T>>
 
 inline fun <reified T : Any> String.to2DArray(spliter: (Char) -> T = { it as T }): Grid<T> {
