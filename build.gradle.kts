@@ -35,4 +35,5 @@ dependencies {
     implementation(libs.coroutines)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
+    implementation(kotlin("reflect"))
 }

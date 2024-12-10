@@ -4,32 +4,32 @@ import kotlinx.coroutines.*
 import java.util.*
 import kotlin.time.measureTimedValue
 
-private val days = listOf<Day>(
-    Day01,
-    Day02,
-    Day03,
-    Day04,
-    Day05,
-    Day06,
-    Day07,
-    Day08,
-    Day09,
-    // Day10,
-    // Day11,
-    // Day12,
-    // Day13,
-    // Day14,
-    // Day15,
-    // Day16,
-    // Day17,
-    // Day18,
-    // Day19,
-    // Day20,
-    // Day21,
-    // Day22,
-    // Day23,
-    // Day24,
-    // Day25
+private val days = listOf(
+    Day01::class,
+    Day02::class,
+    Day03::class,
+    Day04::class,
+    Day05::class,
+    Day06::class,
+    Day07::class,
+    Day08::class,
+    Day09::class,
+    Day10::class,
+    // Day11::class,
+    // Day12::class,
+    // Day13::class,
+    // Day14::class,
+    // Day15::class,
+    // Day16::class,
+    // Day17::class,
+    // Day18::class,
+    // Day19::class,
+    // Day20::class,
+    // Day21::class,
+    // Day22::class,
+    // Day23::class,
+    // Day24::class,
+    // Day25::class
 )
 
 fun main(args: Array<String>) {
@@ -39,11 +39,10 @@ fun main(args: Array<String>) {
         calendar.get(Calendar.DAY_OF_MONTH)
     } else {
         args.firstOrNull()?.toIntOrNull()
-    }?.takeIf { i ->
-        i in 1..days.size
-    } ?: error("Invalid day")
+    }?.takeIf { i -> i in 1..days.size } ?: error("Invalid day")
 
-    val day = days.getOrNull(dayIndex - 1) ?: error("day.Day not found")
+    val dayClass = days.getOrNull(dayIndex - 1) ?: error("Day not found")
+    val day = dayClass.objectInstance!!
 
     println("Day ${day.number}")
 
