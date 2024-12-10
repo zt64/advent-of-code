@@ -2,8 +2,8 @@ package util
 
 typealias Grid<T> = Array<Array<T>>
 
-inline fun <reified T : Any> String.to2DArray(spliter: (Char) -> T = { it as T }): Grid<T> {
-    return lines().map { it.map(spliter).toTypedArray() }.toTypedArray()
+inline fun <reified T : Any> String.to2DArray(splitter: (Char) -> T = { it as T }): Grid<T> {
+    return lines().map { it.map(splitter).toTypedArray() }.toTypedArray()
 }
 
 fun <T> Grid<T>.forEach2D(action: (T, row: Int, col: Int) -> Unit) {
@@ -12,9 +12,25 @@ fun <T> Grid<T>.forEach2D(action: (T, row: Int, col: Int) -> Unit) {
     }
 }
 
+inline fun <reified T> Grid<T>.map2D(transform: (T, row: Int, col: Int) -> T): Grid<T> {
+    return mapIndexed2D { _, value, row, col -> transform(value, row, col) }
+}
+
+inline fun <reified T, reified R> Grid<T>.mapIndexed2D(transform: (index: Int, T, row: Int, col: Int) -> R): Grid<R> {
+    return Array(size) { i -> Array(this[i].size) { j -> transform(i, this[i][j], i, j) } }
+}
+
+inline fun <reified T, reified R> Grid<T>.mapIndexedNotNull2D(transform: (T, row: Int, col: Int) -> R?): Grid<R> {
+    return Array(size) { i  ->
+        Array(this[i].size) { j ->
+            transform(this[i][j], i, j)
+        }.filterNotNull().toTypedArray()
+    }
+}
+
 operator fun <T> Grid<T>.get(x: Int, y: Int): T = this[x][y]
 
-fun <T> Grid<T>.getOrNull(x: Int, y: Int): T? = if (x in indices && y in this[x].indices) this[x][y] else null
+fun <T> Grid<T>.getOrNull(x: Int, y: Int): T? = this.getOrNull(x)?.getOrNull(y)
 
 operator fun <T> Grid<T>.contains(pair: Pair<Int, Int>): Boolean = pair.first in indices && pair.second in this[pair.first].indices
 
