@@ -32,6 +32,11 @@ operator fun <T> Grid<T>.get(x: Int, y: Int): T = this[x][y]
 
 fun <T> Grid<T>.getOrNull(x: Int, y: Int): T? = this.getOrNull(x)?.getOrNull(y)
 
+fun <T> Grid<T>.getOrNull(x: Int, y: Int, direction: Direction): T? {
+    val (dy, dx) = direction.offset
+    return getOrNull(x + dx, y + dy)
+}
+
 operator fun <T> Grid<T>.contains(pair: Pair<Int, Int>): Boolean = pair.first in indices && pair.second in this[pair.first].indices
 
 operator fun <T> Grid<T>.set(x: Int, y: Int, value: T) {

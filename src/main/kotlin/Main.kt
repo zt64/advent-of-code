@@ -16,7 +16,7 @@ private val days = listOf(
     Day09::class,
     Day10::class,
     Day11::class,
-    // Day12::class,
+    Day12::class,
     // Day13::class,
     // Day14::class,
     // Day15::class,
@@ -32,7 +32,7 @@ private val days = listOf(
     // Day25::class
 )
 
-fun main(args: Array<String>) {
+fun main(args: Array<String>) = runBlocking {
     val calendar = Calendar.getInstance()
 
     val dayIndex = if (calendar.get(Calendar.YEAR) == 2024) {
@@ -46,7 +46,7 @@ fun main(args: Array<String>) {
 
     println("Day ${day.number}")
 
-    runBlocking(Dispatchers.IO) {
+    withContext(Dispatchers.IO) {
         val part1Job = launch {
             val progressJob = launchProgressIndicator("Processing part 1")
             val (part1, part1Duration) = measureTimedValue(day::part1)
