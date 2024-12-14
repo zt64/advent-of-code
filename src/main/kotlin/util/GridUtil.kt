@@ -2,6 +2,14 @@ package util
 
 typealias Grid<T> = Array<Array<T>>
 
+inline fun <reified T> Grid(h: Int, w: Int, init: (Int, Int) -> T): Grid<T> {
+    return Array(h) { i -> Array(w) { j -> init(i, j) } }
+}
+
+inline fun <reified T> Grid(h: Int, w: Int, init: () -> T): Grid<T> {
+    return Array(h) { i -> Array(w) { j -> init() } }
+}
+
 inline fun <reified T : Any> String.to2DArray(splitter: (Char) -> T = { it as T }): Grid<T> {
     return lines().map { it.map(splitter).toTypedArray() }.toTypedArray()
 }
