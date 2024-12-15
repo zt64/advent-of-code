@@ -20,3 +20,8 @@ fun Direction.turnLeft(): Direction = when (this) {
     Direction.SOUTH -> Direction.EAST
     Direction.EAST -> Direction.NORTH
 }
+
+operator fun Pair<Int, Int>.plus(direction: Direction): Pair<Int, Int> {
+    val (dx, dy) = direction.offset
+    return first + dx to second + dy
+}
