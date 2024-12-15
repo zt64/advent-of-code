@@ -38,6 +38,15 @@ operator fun <T> Grid<T>.get(x: Int, y: Int): T = this[x][y]
 
 operator fun <T> Grid<T>.get(pair: Pair<Int, Int>): T = this[pair.first][pair.second]
 
+operator fun <T> Grid<T>.get(value: T): Pair<Int, Int>? {
+    forEachIndexed { i, row ->
+        row.forEachIndexed { j, v ->
+            if (v == value) return i to j
+        }
+    }
+    return null
+}
+
 fun <T> Grid<T>.getOrNull(x: Int, y: Int): T? = this.getOrNull(x)?.getOrNull(y)
 
 fun <T> Grid<T>.getOrNull(x: Int, y: Int, direction: Direction): T? {

@@ -3,7 +3,7 @@ package day
 import util.*
 import java.util.*
 
-enum class Movement(val offset: Pair<Int, Int>) {
+private enum class Movement(val offset: Pair<Int, Int>) {
     UP(-1 to 0),
     DOWN(1 to 0),
     LEFT(0 to -1),
@@ -23,12 +23,29 @@ object Day15 : Day(15) {
 
     override fun part1(): Any {
         val map = input.substringBefore("\n\n").to2DArray<Char>()
-        var pos = map.getStartPos()
 
-        map[pos.first][pos.second] = '.'
+        return countCoordinates(map)
+    }
 
-        for (m in movements) {
-            var next = pos + m.offset
+    override fun part2(): Any {
+        var map = input
+            .substringBefore("\n\n")
+            .replace("#", "##")
+            .replace("O", "[]")
+            .replace(".", "..")
+            .replace("@", "@.")
+            .to2DArray<Char>()
+
+        return countCoordinates(map)
+    }
+
+    private fun countCoordinates(map: Grid<Char>): Int {
+        var pos = map['@']!!
+        map[pos] = '.'
+
+        movement@ for (m in movements) {
+            val offset = m.offset
+            var next = pos + offset
 
             when (map[next]) {
                 '.' -> pos = next
@@ -43,55 +60,29 @@ object Day15 : Day(15) {
                     map[finalPos] = 'O'
                     pos = next
                 }
-            }
-        }
-
-        return map.countCoordinates('O')
-    }
-
-    override fun part2(): Any {
-        var map = input
-            .substringBefore("\n\n")
-            .replace("#", "##")
-            .replace("O", "[]")
-            .replace(".", "..")
-            .replace("@", "@.")
-            .to2DArray<Char>()
-
-        var pos = map.getStartPos()
-
-        map[pos.first][pos.second] = '.'
-
-        for (m in movements) {
-            val offset = m.offset
-            var next = pos + offset
-
-            when  {
-                map[next] == '.' -> pos = next
-                map[next].let { it == '[' || it == ']' } -> {
-                    val queue: Queue<Pair<Int, Int>> = LinkedList()
-
-                    queue.add(next)
-
+                '[', ']' -> {
+                    val s = Stack<Pair<Int, Int>>().apply { add(next) }
                     val seen = mutableSetOf<Pair<Int, Int>>()
 
-                    while (queue.isNotEmpty()) {
-                        val p = queue.poll()
-                        if (map[p] !in "[]") error("death")
+                    while (s.isNotEmpty()) {
+                        val p = s.removeLast()
                         if (!seen.add(p)) continue
 
                         when (map[p]) {
-                            '[' -> queue.add(p + Movement.RIGHT.offset)
-                            ']' -> queue.add(p + Movement.LEFT.offset)
+                            '[' -> s.add(p + Movement.RIGHT.offset)
+                            ']' -> s.add(p + Movement.LEFT.offset)
                         }
 
-                        if (map[p + offset] in "[]") queue.add(p + offset)
+                        when (map[p + offset]) {
+                            '[', ']' -> s.add(p + offset)
+                            '#' -> continue@movement
+                        }
                     }
 
-                    if (seen.any { map[it + offset] == '#'}) continue
+                    if (seen.any { map[it + offset] == '#' }) continue
 
                     seen.associateWith { map[it] }
-                        .also { it.forEach { (p, _) -> map[p] = '.' } }
+                        .onEach { (p, _) -> map[p] = '.' }
                         .forEach { (p, c) -> map[p + offset] = c }
 
                     pos = next
@@ -99,21 +90,8 @@ object Day15 : Day(15) {
             }
         }
 
-        return map.countCoordinates('[')
-    }
-
-    private fun Grid<Char>.countCoordinates(char: Char): Int {
         var n = 0
-        forEach2D { c, row, col -> if (c == char) n += 100 * row + col }
+        map.forEach2D { c, row, col -> if (c == '[' || c == 'O') n += 100 * row + col }
         return n
-    }
-
-    private fun Grid<Char>.getStartPos(): Pair<Int, Int> {
-        forEachIndexed { i, row ->
-            row.forEachIndexed { j, c ->
-                if (c == '@') return i to j
-            }
-        }
-        throw IllegalArgumentException("No start position found")
     }
 }
