@@ -24,7 +24,7 @@ graalvmNative {
                 vendor.set(JvmVendorSpec.matching("Oracle"))
             })
 
-            buildArgs("-Ob")
+            buildArgs("-O3")
 
             resources.autodetect()
         }

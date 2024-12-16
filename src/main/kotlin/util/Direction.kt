@@ -7,21 +7,21 @@ enum class Direction(val offset: Point) {
     WEST(-1 to 0)
 }
 
-fun Direction.turnRight(): Direction = when (this) {
+fun Direction.cw(): Direction = when (this) {
     Direction.NORTH -> Direction.EAST
     Direction.EAST -> Direction.SOUTH
     Direction.SOUTH -> Direction.WEST
     Direction.WEST -> Direction.NORTH
 }
 
-fun Direction.turnLeft(): Direction = when (this) {
+fun Direction.ccw(): Direction = when (this) {
     Direction.NORTH -> Direction.WEST
     Direction.WEST -> Direction.SOUTH
     Direction.SOUTH -> Direction.EAST
     Direction.EAST -> Direction.NORTH
 }
 
-operator fun Pair<Int, Int>.plus(direction: Direction): Pair<Int, Int> {
+operator fun Point.plus(direction: Direction): Point {
     val (dx, dy) = direction.offset
     return first + dx to second + dy
 }
