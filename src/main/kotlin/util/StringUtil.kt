@@ -17,3 +17,7 @@ fun String.splitAtIndex(index: Int): Pair<String, String> {
  * @return A pair of the first and second half of the string.
  */
 fun String.halve(): Pair<String, String> = splitAtIndex(length / 2)
+
+fun String.substringBetween(start: String, end: String): String {
+    return substringAfter(start).substringBefore(end)
+}
