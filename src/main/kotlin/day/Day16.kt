@@ -87,7 +87,7 @@ object Day16 : Day(16) {
     }
 }
 
-operator fun Point.plus(direction: Direction): Point {
+private operator fun Point.plus(direction: Direction): Point {
     val (dx, dy) = direction.offset
     return first + dy to second + dx
 }

@@ -54,6 +54,8 @@ fun <T> Grid<T>.getOrNull(x: Int, y: Int, direction: Direction): T? {
     return getOrNull(x + dx, y + dy)
 }
 
+fun <T> Grid<T>.getOrNull(pair: Pair<Int, Int>): T? = this.getOrNull(pair.first)?.getOrNull(pair.second)
+
 operator fun <T> Grid<T>.contains(pair: Pair<Int, Int>): Boolean =
     pair.first in indices && pair.second in this[pair.first].indices
 
@@ -63,4 +65,14 @@ operator fun <T> Grid<T>.set(x: Int, y: Int, value: T) {
 
 operator fun <T> Grid<T>.set(pair: Pair<Int, Int>, value: T) {
     this[pair.first][pair.second] = value
+}
+
+val <T> Grid<T>.width: Int get() = first().size
+val <T> Grid<T>.height: Int get() = size
+
+val <T> Grid<T>.rows: Int get() = size
+val <T> Grid<T>.cols: Int get() = first().size
+
+fun <T> Grid<T>.toString2D(): String {
+    return joinToString("\n") { it.joinToString("") }
 }
