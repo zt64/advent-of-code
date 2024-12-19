@@ -23,7 +23,7 @@ private val days = listOf(
     Day16::class,
     Day17::class,
     Day18::class,
-    // Day19::class,
+    Day19::class,
     // Day20::class,
     // Day21::class,
     // Day22::class,
