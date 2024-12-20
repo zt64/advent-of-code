@@ -1,5 +1,6 @@
 package day
 
+import util.mul
 import util.x
 import util.y
 
@@ -39,7 +40,7 @@ object Day14 : Day(14) {
                 }
             }
 
-        return quadrantCounts.reduce { acc, count -> acc * count }
+        return quadrantCounts.mul()
     }
 
     override fun part2(): Any {

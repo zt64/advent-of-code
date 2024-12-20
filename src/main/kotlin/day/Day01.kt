@@ -3,8 +3,8 @@ package day
 import kotlin.math.abs
 
 object Day01 : Day(1) {
-    val firstList = mutableListOf<Int>()
-    val secondList = mutableListOf<Int>()
+    private val firstList = mutableListOf<Int>()
+    private val secondList = mutableListOf<Int>()
 
     init {
         input.lines().forEach {

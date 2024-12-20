@@ -24,7 +24,7 @@ private val days = listOf(
     Day17::class,
     Day18::class,
     Day19::class,
-    // Day20::class,
+    Day20::class,
     // Day21::class,
     // Day22::class,
     // Day23::class,
@@ -35,10 +35,15 @@ private val days = listOf(
 fun main(args: Array<String>) = runBlocking {
     val calendar = Calendar.getInstance()
 
-    val dayIndex = if (calendar.get(Calendar.YEAR) == 2024) {
+    val dayIndex = if (calendar.get(Calendar.YEAR) == 2024 && args.isEmpty()) {
         calendar.get(Calendar.DAY_OF_MONTH)
     } else {
-        args.firstOrNull()?.toIntOrNull()
+        if (args.isEmpty()) {
+            println("Please provide a day number")
+            return@runBlocking
+        }
+
+        args.first().toIntOrNull()
     }?.takeIf { i -> i in 1..days.size } ?: error("Invalid day")
 
     val dayClass = days.getOrNull(dayIndex - 1) ?: error("Day not found")

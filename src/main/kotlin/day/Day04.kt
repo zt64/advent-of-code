@@ -1,9 +1,12 @@
 package day
 
+import util.Directions
+import util.to2DArray
+
 object Day04 : Day(4) {
     private const val MATCH = "XMAS"
     private const val MAGIC = 3
-    val grid = input.lines().map { it.toCharArray() }
+    private val grid = input.to2DArray<Char>()
     override fun part1(): Any {
         var matches = 0
         grid.forEachIndexed { rowIndex, row ->
@@ -23,32 +26,14 @@ object Day04 : Day(4) {
                     if (match) matches++
                 }
 
-                val canGoLeft = charIndex - MAGIC >= 0
-                val canGoRight = charIndex + MAGIC < row.size
-                val canGoUp = rowIndex - MAGIC >= 0
-                val canGoDown = rowIndex + MAGIC < grid.size
+                Directions.ALL.forEach { (yIncr, xIncr) ->
+                    val newRow = rowIndex + yIncr * MAGIC
+                    val newCol = charIndex + xIncr * MAGIC
 
-                // Check above
-                if (canGoUp) {
-                    check(0, -1)
-
-                    if (canGoLeft) check(-1, -1)
-                    if (canGoRight) check(1, -1)
+                    if (newRow in grid.indices && newCol in row.indices) {
+                        check(xIncr, yIncr)
+                    }
                 }
-
-                // Check below
-                if (canGoDown) {
-                    check(0, 1)
-
-                    if (canGoLeft) check(-1, 1)
-                    if (canGoRight) check(1, 1)
-                }
-
-                // Check left
-                if (canGoLeft) check(-1, 0)
-
-                // Check right
-                if (canGoRight) check(1, 0)
             }
         }
 

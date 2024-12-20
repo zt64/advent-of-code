@@ -1,7 +1,6 @@
 package day
 
 import util.*
-import util.Point
 import java.util.*
 
 object Day12 : Day(12) {
@@ -22,8 +21,8 @@ object Day12 : Day(12) {
 
                 if (point in seen || !region.add(point)) continue
 
-                Direction.entries.map { dir -> point + dir.offset }
-                    .filter { grid.getOrNull(it.first, it.second) == p }
+                Directions.CARDINALS.map { dir -> point + dir }
+                    .filter { grid.getOrNull(it) == p }
                     .let { queue.addAll(it) }
             }
 
@@ -36,14 +35,14 @@ object Day12 : Day(12) {
     }
 
     override fun part1(): Any = calculatePrice { p, y, x ->
-        Direction.entries.filter { dir -> grid.getOrNull(y, x, dir) != p }.size
+        Directions.CARDINALS.filter { dir -> grid.getOrNull(y, x, dir) != p }.size
     }
 
     override fun part2() = calculatePrice { p, y, x ->
-        (Direction.entries + Direction.entries.first()).zipWithNext().filter { (dir1, dir2) ->
+        (Directions.CARDINALS + Directions.CARDINALS.first()).zipWithNext().filter { (dir1, dir2) ->
             val a = grid.getOrNull(y, x, dir1)
             val b = grid.getOrNull(y, x, dir2)
-            val diag = grid.getOrNull(y + dir1.offset.y + dir2.offset.y, x + dir1.offset.x + dir2.offset.x)
+            val diag = grid.getOrNull(y + dir1.y + dir2.y, x + dir1.x + dir2.x)
 
             (a != p && b != p) || (a == p && b == p && diag != p)
         }.size

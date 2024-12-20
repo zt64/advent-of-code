@@ -1,7 +1,6 @@
 package day
 
 import util.*
-import util.Point
 import java.util.*
 
 object Day16 : Day(16) {
@@ -14,14 +13,14 @@ object Day16 : Day(16) {
     override fun part1(): Any {
         val seen = mutableSetOf<Pair<Point, Direction>>()
         val queue = PriorityQueue<Tile>(compareBy { it.score })
-        queue.add(Tile(start, 0, Direction.EAST))
+        queue.add(Tile(start, 0, Directions.East))
 
         while (queue.isNotEmpty()) {
             val (pos, score, dir) = queue.poll()
 
             if (pos == end) return score
 
-            listOf(dir, dir.ccw(), dir.cw()).forEach { newDir ->
+            listOf(dir, dir.cardinalTurnCCW(), dir.cardinalTurnCW()).forEach { newDir ->
                 val next = pos + newDir
 
                 if (map[next] != '#') {
@@ -53,7 +52,7 @@ object Day16 : Day(16) {
         val seen = mutableMapOf<Pair<Point, Direction>, Int>()
         val best = mutableSetOf<Point>()
         val queue = PriorityQueue<Path>(compareBy { it.score })
-        queue.add(Path(listOf(start), 0, Direction.EAST))
+        queue.add(Path(listOf(start), 0, Directions.East))
 
         while (queue.isNotEmpty()) {
             val path = queue.poll()
@@ -77,8 +76,8 @@ object Day16 : Day(16) {
                 )
             }
 
-            queue += path.copy(score = score + 1000, dir = dir.ccw())
-            queue += path.copy(score = score + 1000, dir = dir.cw())
+            queue += path.copy(score = score + 1000, dir = dir.cardinalTurnCCW())
+            queue += path.copy(score = score + 1000, dir = dir.cardinalTurnCW())
         }
 
         println(min)
@@ -88,6 +87,6 @@ object Day16 : Day(16) {
 }
 
 private operator fun Point.plus(direction: Direction): Point {
-    val (dx, dy) = direction.offset
+    val (dx, dy) = direction
     return first + dy to second + dx
 }

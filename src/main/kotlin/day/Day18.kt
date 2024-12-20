@@ -1,7 +1,6 @@
 package day
 
 import util.*
-import util.Point
 import java.util.*
 
 object Day18 : Day(18) {
@@ -42,7 +41,7 @@ object Day18 : Day(18) {
 
             if (p == Point(width - 1, height - 1)) return steps
 
-            Direction.entries.forEach { dir ->
+            Directions.CARDINALS.forEach { dir ->
                 val np = p + dir
 
                 if (grid.getOrNull(np) != '.' || !seen.add(np)) return@forEach

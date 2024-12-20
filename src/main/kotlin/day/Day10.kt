@@ -1,8 +1,6 @@
 package day
 
-import util.getOrNull
-import util.mapIndexedNotNull2D
-import util.to2DArray
+import util.*
 import java.util.*
 
 object Day10 : Day(10) {
@@ -46,18 +44,9 @@ object Day10 : Day(10) {
         }
     }
 
-    private fun Point.getNeighborPoints(): List<Point> {
-        return listOfNotNull(
-            getNeighborPoint(0, -1),
-            getNeighborPoint(0, 1),
-            getNeighborPoint(-1, 0),
-            getNeighborPoint(1, 0),
-        )
-    }
-
-    private fun Point.getNeighborPoint(yOffset: Int, xOffset: Int): Point? {
-        return map.getOrNull(y + yOffset, x + xOffset)
+    private fun Point.getNeighborPoints() = Directions.CARDINALS.mapNotNull { d ->
+        map.getOrNull(y + d.y, x + d.x)
             ?.takeIf { it == height + 1 }
-            ?.let { Point(x + xOffset, y + yOffset, it) }
+            ?.let { Point(x + d.x, y + d.y, it) }
     }
 }

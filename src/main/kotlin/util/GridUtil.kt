@@ -50,7 +50,7 @@ operator fun <T> Grid<T>.get(value: T): Pair<Int, Int>? {
 fun <T> Grid<T>.getOrNull(x: Int, y: Int): T? = this.getOrNull(x)?.getOrNull(y)
 
 fun <T> Grid<T>.getOrNull(x: Int, y: Int, direction: Direction): T? {
-    val (dy, dx) = direction.offset
+    val (dy, dx) = direction
     return getOrNull(x + dx, y + dy)
 }
 

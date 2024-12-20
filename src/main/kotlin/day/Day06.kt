@@ -1,33 +1,21 @@
 package day
 
-import util.forEach2D
-import util.to2DArray
+import util.*
 
-private data class Point(val x: Int, val y: Int)
-
-object Day06 : Day(6) {
+class Day06(input: String) : Day(6) {
     private val grid = input.to2DArray<Char>()
-
-    private enum class Direction {
-        UP, RIGHT, DOWN, LEFT
-    }
 
     // counts the number of points visited or returns -1 if the path is a loop
     private fun Array<Array<Char>>.countPoints(): Int {
         var position = findStart()
-        var dir = Direction.UP
+        var dir = Directions.North
         val visited = mutableSetOf(position to dir)
 
         while (true) {
-            val next = when (dir) {
-                Direction.UP -> Point(position.x, position.y - 1)
-                Direction.RIGHT -> Point(position.x + 1, position.y)
-                Direction.DOWN -> Point(position.x, position.y + 1)
-                Direction.LEFT -> Point(position.x - 1, position.y)
-            }
+            val next = position + dir
 
             if (this.getOrNull(next.y)?.getOrNull(next.x) == '#') {
-                dir = Direction.entries.let { it[(it.indexOf(dir) + 1) % it.size] }
+                dir = Directions.CARDINALS.let { it[(it.indexOf(dir) + 1) % it.size] }
 
                 continue
             }
@@ -42,9 +30,7 @@ object Day06 : Day(6) {
         return visited.distinctBy { it.first }.size
     }
 
-    override fun part1(): Any {
-        return grid.countPoints()
-    }
+    override fun part1(): Any = grid.countPoints()
 
     override fun part2(): Any {
         var paths = 0

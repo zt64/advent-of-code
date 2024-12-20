@@ -1,7 +1,5 @@
 package day
 
-import java.math.BigInteger
-
 object Day09 : Day(9) {
     private data class File(
         val id: Int,
@@ -64,13 +62,13 @@ object Day09 : Day(9) {
         return tmp.map { file -> file.blocks }.flatten().calculateChecksum()
     }
 
-    private fun List<Int>.calculateChecksum(): BigInteger {
-        var checksum = BigInteger.ZERO
+    private fun List<Int>.calculateChecksum(): Long {
+        var checksum = 0L
 
         forEachIndexed { index, c ->
             if (c == -1) return@forEachIndexed
 
-            checksum += index.toBigInteger() * c.toBigInteger()
+            checksum += index * c
         }
 
         return checksum
