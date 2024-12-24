@@ -2,6 +2,7 @@
 import day.*
 import kotlinx.coroutines.*
 import java.util.*
+import kotlin.time.Duration
 import kotlin.time.measureTimedValue
 
 private val days = listOf(
@@ -25,9 +26,9 @@ private val days = listOf(
     Day18::class,
     Day19::class,
     Day20::class,
-    // Day21::class,
-    // Day22::class,
-    // Day23::class,
+    Day21::class,
+    Day22::class,
+    Day23::class,
     // Day24::class,
     // Day25::class
 )
@@ -47,35 +48,39 @@ fun main(args: Array<String>) = runBlocking {
     }?.takeIf { i -> i in 1..days.size } ?: error("Invalid day")
 
     val dayClass = days.getOrNull(dayIndex - 1) ?: error("Day not found")
-    val day = dayClass.objectInstance!!
+    val day = Day21
 
-    println("Day ${day.number}")
+    println("\n🎄 Day ${dayIndex.toString().padStart(2, '0')} 🎄")
+    println("═".repeat(30))
 
     withContext(Dispatchers.IO) {
-        val part1Job = launch {
-            val progressJob = launchProgressIndicator("Processing part 1")
-            val (part1, part1Duration) = measureTimedValue(day::part1)
-            progressJob.cancel()
-            println("\r* Part 1 (took ${part1Duration}): $part1")
-        }
-        part1Job.join()
-
-        val part2Job = launch {
-            val progressJob = launchProgressIndicator("Processing part 2")
-            val (part2, part2Duration) = measureTimedValue(day::part2)
-            progressJob.cancel()
-            println("\r* Part 2 (took ${part2Duration}): $part2")
-        }
-        part2Job.join()
+        runPart(1, day::part1)
+        runPart(2, day::part2)
     }
 }
 
+private suspend fun CoroutineScope.runPart(partNumber: Int, solve: () -> Any) {
+    launch {
+        val progressJob = launchProgressIndicator("Running part $partNumber")
+        val (result, duration) = measureTimedValue(solve)
+        progressJob.cancel()
+
+        val formattedDuration = duration.formatNicely()
+        println("\r* Part $partNumber (${formattedDuration.padStart(6)}): $result")
+    }.join()
+}
+
+private fun Duration.formatNicely(): String = when {
+    inWholeSeconds > 0 -> "%.2fs".format(inWholeMilliseconds / 1000.0)
+    else -> "%.2fms".format(inWholeNanoseconds / 1_000_000.0)
+}
+
 private fun CoroutineScope.launchProgressIndicator(message: String) = launch {
-    val progressChars = arrayOf("|", "/", "-", "\\")
+    val progressChars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏".toList()
     var index = 0
     while (isActive) {
         print("\r$message ${progressChars[index % progressChars.size]}")
         index++
-        delay(100)
+        delay(80)
     }
 }

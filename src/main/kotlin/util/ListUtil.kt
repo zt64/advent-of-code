@@ -7,3 +7,51 @@ fun IntArray.mul(): Int {
 fun Iterable<Int>.mul(): Int {
     return reduce { acc, i -> acc * i }
 }
+
+/**
+ * Returns all permutations of the collection.
+ *
+ * ```
+ * listOf(1, 2, 3).permutations() == [[1, 2, 3], [2, 1, 3], [2, 3, 1], [1, 3, 2], [3, 1, 2], [3, 2, 1]]
+ * ```
+ */
+fun <E> Collection<E>.permutations(): List<List<E>> {
+    if (size == 1) return listOf(toList())
+    val element = first()
+    return drop(1).permutations().flatMap { permutation ->
+        (0..permutation.size).map { i ->
+            permutation.toMutableList().apply { add(i, element) }
+        }
+    }
+}
+
+/**
+ * Returns the Cartesian product of the collection of collections.
+ *
+ * ```
+ * listOf(listOf(1, 2), listOf(3, 4)).cartesianProduct() == [[1, 3], [1, 4], [2, 3], [2, 4]]
+ * ```
+ */
+fun <T> Collection<Collection<T>>.cartesianProduct(): List<List<T>> {
+    if (isEmpty()) return emptyList()
+    if (size == 1) return first().map { listOf(it) }
+    val rest = drop(1).cartesianProduct()
+    return first().flatMap { x -> rest.map { listOf(x) + it } }
+}
+
+/**
+ * Returns all combinations of k elements from the list.
+ *
+ * @param k the number of elements in each combination
+ *
+ * ```
+ * listOf(1, 2, 3, 4).combinations(2) == [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
+ * ```
+ */
+fun List<Int>.combinations(k: Int): List<List<Int>> {
+    if (k == 0) return listOf(emptyList())
+    if (k > size) return emptyList()
+    val x = drop(1).combinations(k - 1).map { it + first() }
+    val y = drop(1).combinations(k)
+    return x + y
+}

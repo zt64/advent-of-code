@@ -21,3 +21,17 @@ fun String.halve(): Pair<String, String> = splitAtIndex(length / 2)
 fun String.substringBetween(start: String, end: String): String {
     return substringAfter(start).substringBefore(end)
 }
+
+fun String.permutations(): List<String> {
+    when (length) {
+        0 -> return emptyList()
+        1 -> return listOf(this)
+    }
+
+    val element = first()
+    return drop(1).permutations().flatMap { permutation ->
+        (0..permutation.length).map { i ->
+            permutation.toMutableList().apply { add(i, element) }.joinToString("")
+        }
+    }.distinct()
+}
