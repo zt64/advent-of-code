@@ -29,8 +29,8 @@ private val days = listOf(
     Day21::class,
     Day22::class,
     Day23::class,
-    // Day24::class,
-    // Day25::class
+    Day24::class,
+    Day25::class
 )
 
 fun main(args: Array<String>) = runBlocking {
@@ -48,7 +48,7 @@ fun main(args: Array<String>) = runBlocking {
     }?.takeIf { i -> i in 1..days.size } ?: error("Invalid day")
 
     val dayClass = days.getOrNull(dayIndex - 1) ?: error("Day not found")
-    val day = Day21
+    val day = dayClass.objectInstance!!
 
     println("\n🎄 Day ${dayIndex.toString().padStart(2, '0')} 🎄")
     println("═".repeat(30))
