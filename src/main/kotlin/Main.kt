@@ -10,33 +10,12 @@ private val days = listOf(
     Day02::class,
     Day03::class,
     Day04::class,
-    Day05::class,
-    Day06::class,
-    Day07::class,
-    Day08::class,
-    Day09::class,
-    Day10::class,
-    Day11::class,
-    Day12::class,
-    Day13::class,
-    Day14::class,
-    Day15::class,
-    Day16::class,
-    Day17::class,
-    Day18::class,
-    Day19::class,
-    Day20::class,
-    Day21::class,
-    Day22::class,
-    Day23::class,
-    Day24::class,
-    Day25::class
 )
 
 fun main(args: Array<String>) = runBlocking {
     val calendar = Calendar.getInstance()
 
-    val dayIndex = if (calendar.get(Calendar.YEAR) == 2024 && args.isEmpty()) {
+    val dayIndex = if (calendar.get(Calendar.YEAR) == 2025 && args.isEmpty()) {
         calendar.get(Calendar.DAY_OF_MONTH)
     } else {
         if (args.isEmpty()) {
@@ -47,7 +26,7 @@ fun main(args: Array<String>) = runBlocking {
         args.first().toIntOrNull()
     }?.takeIf { i -> i in 1..days.size } ?: error("Invalid day")
 
-    val dayClass = days.getOrNull(dayIndex - 1) ?: error("Day not found")
+    val dayClass = days.getOrNull(3) ?: error("Day not found")
     val day = dayClass.objectInstance!!
 
     println("\n🎄 Day ${dayIndex.toString().padStart(2, '0')} 🎄")
@@ -79,7 +58,7 @@ private fun CoroutineScope.launchProgressIndicator(message: String) = launch {
     val progressChars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏".toList()
     var index = 0
     while (isActive) {
-        print("\r$message ${progressChars[index % progressChars.size]}")
+        print("\r$message ${progressChars[index % progressChars.size]}\n")
         index++
         delay(80)
     }

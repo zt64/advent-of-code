@@ -1,17 +1,31 @@
 package day
 
+import kotlin.math.abs
+
 object Day03 : Day(3) {
-    private fun String.calculate(): Int {
-        val regex = """mul\((\d+),(\d+)\)""".toRegex()
-        return regex.findAll(this).sumOf {
-            it.groupValues.let { it[1].toInt() * it[2].toInt() }
+    private val firstList = mutableListOf<Int>()
+    private val secondList = mutableListOf<Int>()
+
+    init {
+        input.lines().forEach {
+            val (left, right) = it.split("   ")
+
+            firstList += left.toInt()
+            secondList += right.toInt()
         }
     }
 
-    override fun part1(): Any = input.calculate()
+    override fun part1(): Any {
+        val secondIterator = secondList.sorted().iterator()
+
+        return firstList.sorted().sumOf { i ->
+            abs(i - secondIterator.next())
+        }
+    }
 
     override fun part2(): Any {
-        val excludeRegex = Regex("""don't\(\).*?(do\(\)|$)""", RegexOption.DOT_MATCHES_ALL)
-        return excludeRegex.replace(input, "").calculate()
+        return firstList.sumOf { i ->
+            secondList.count { j -> i == j } * i
+        }
     }
 }
