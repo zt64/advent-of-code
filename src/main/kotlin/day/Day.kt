@@ -1,13 +1,8 @@
 package day
 
-sealed class Day(val number: Int) {
-    protected val input by lazy {
-        javaClass.getResource(
-            "/day${number.toString().padStart(2, '0')}.txt"
-        )!!.readText()
-    }
+sealed class Day(protected val input: String) {
+    val number: Int = this::class.simpleName!!.removePrefix("Day").toInt()
 
     abstract fun part1(): Any
-
     abstract fun part2(): Any
 }

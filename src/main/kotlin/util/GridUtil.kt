@@ -34,27 +34,27 @@ inline fun <reified T, reified R> Grid<T>.mapIndexedNotNull2D(transform: (T, row
     }
 }
 
-operator fun <T> Grid<T>.get(x: Int, y: Int): T = this[x][y]
+operator fun <T> Grid<T>.get(x: Int, y: Int): T = this[y][x]
 
-operator fun <T> Grid<T>.get(pair: Pair<Int, Int>): T = this[pair.first][pair.second]
+operator fun <T> Grid<T>.get(point: Point2D): T = this[point.y][point.x]
 
-operator fun <T> Grid<T>.get(value: T): Pair<Int, Int>? {
+operator fun <T> Grid<T>.get(value: T): Point2D? {
     forEachIndexed { i, row ->
         row.forEachIndexed { j, v ->
-            if (v == value) return i to j
+            if (v == value) return Point2D(j, i)
         }
     }
     return null
 }
 
-fun <T> Grid<T>.getOrNull(x: Int, y: Int): T? = this.getOrNull(x)?.getOrNull(y)
+fun <T> Grid<T>.getOrNull(x: Int, y: Int): T? = this.getOrNull(y)?.getOrNull(x)
 
 fun <T> Grid<T>.getOrNull(x: Int, y: Int, direction: Direction): T? {
     val (dy, dx) = direction
     return getOrNull(x + dx, y + dy)
 }
 
-fun <T> Grid<T>.getOrNull(pair: Pair<Int, Int>): T? = this.getOrNull(pair.first)?.getOrNull(pair.second)
+fun <T> Grid<T>.getOrNull(pair: Point2D): T? = this.getOrNull(pair.y)?.getOrNull(pair.x)
 
 operator fun <T> Grid<T>.contains(pair: Pair<Int, Int>): Boolean =
     pair.first in indices && pair.second in this[pair.first].indices

@@ -2,7 +2,7 @@ package day
 
 import util.*
 
-object Day04 : Day(4) {
+class Day04(input: String) : Day(input) {
     private val grid = input.to2DArray<Char>()
 
     private val positions = listOf(
