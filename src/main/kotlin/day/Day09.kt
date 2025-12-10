@@ -7,48 +7,62 @@ class Day09(input: String) : Day(input) {
         line.split(",").map { it.toInt() }.let { Point2D(it[0], it[1]) }
     }
 
-    private fun checkPoint(point: Point2D): Boolean {
-        val x = tiles.map { it.x.toLong()}
-        val y = tiles.map { it.y.toLong() }
-        var c = 0L
-        val vertCount = tiles.size
-        val px = point.x.toLong() + 1
-        val py = point.y.toLong() + 1
-        for (i in 0 until vertCount) {
-            val j = (i - 1 + vertCount) % vertCount
+    private val containedPoints = HashMap<Point2D, Boolean>()
 
-            val x1 = x[i]
-            val y1 = y[i]
-            val x2 = x[j]
-            val y2 = y[j]
+    private fun checkPoint(x: Int, y: Int): Boolean {
+        return containedPoints.getOrPut(Point2D(x, y)) {
+            val px = x.toLong() + 1
+            val py = y.toLong() + 1
 
-            if ((y1 > py != (y2 > py)) && px < ((x2 - x1) * (py - y1) / (y2 - y1)) + x1) {
-                c++
+            var inside = false
+            val n = tiles.size
+
+            for (i in 0 until n) {
+                val j = if (i == 0) n - 1 else i - 1
+
+                val x1 = tiles[i].x.toLong()
+                val y1 = tiles[i].y.toLong()
+                val x2 = tiles[j].x.toLong()
+                val y2 = tiles[j].y.toLong()
+
+                if ((y1 > py) != (y2 > py) &&
+                    px < (x2 - x1) * (py - y1) / (y2 - y1) + x1
+                ) {
+                    inside = !inside
+                }
             }
+            inside
         }
-        return c % 2 == 1L
     }
 
     override fun part1(): Any {
         return tiles.maxOf { start ->
             tiles.maxOf { end ->
-                val width = end.x - start.x.toLong() + 1
-                val height = end.y - start.y.toLong() + 1
-
-                width * height
+                (end.x - start.x.toLong() + 1) * (end.y - start.y.toLong() + 1)
             }
         }
     }
 
     override fun part2(): Any {
-        val filtered = tiles.filter { checkPoint(it) }
-
-        return filtered.maxOf { start ->
-            filtered.maxOf { end ->
+        return tiles.maxOf { start ->
+            tiles.maxOf { end ->
                 val width = end.x - start.x.toLong() + 1
                 val height = end.y - start.y.toLong() + 1
+                var valid =  true
 
-                width * height
+                for (x in start.x..end.x step 20) {
+                    if (!checkPoint(x, start.y)) { valid = false; break }
+                    if (start.y != end.y && !checkPoint(x, end.y)) { valid = false; break }
+                }
+
+                if (valid) {
+                    for (y in (start.y + 1) until end.y step 20) {
+                        if (!checkPoint(start.x, y)) { valid = false; break }
+                        if (start.x != end.x && !checkPoint(end.x, y)) { valid = false; break }
+                    }
+                }
+
+                if (valid) width * height else 0
             }
         }
     }
