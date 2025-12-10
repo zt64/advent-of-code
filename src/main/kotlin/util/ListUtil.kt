@@ -24,6 +24,58 @@ fun <E> Collection<E>.permutations(): List<List<E>> {
         }
     }
 }
+fun <T> List<T>.product(repeat: Int): Sequence<List<T>> =
+    List(repeat) { this }.cartesianProductSeq()
+
+fun <T> Collection<Collection<T>>.cartesianProductSeq(): Sequence<List<T>> = sequence {
+    if (isEmpty()) {
+        yield(emptyList())
+        return@sequence
+    }
+
+    val lists = this@cartesianProductSeq.toList()
+    val indices = IntArray(lists.size)
+
+    while (true) {
+        yield(lists.mapIndexed { i, list -> list.elementAt(indices[i]) })
+
+        var carry = lists.lastIndex
+        while (carry >= 0 && ++indices[carry] == lists[carry].size) {
+            indices[carry] = 0
+            carry--
+        }
+
+        if (carry < 0) break
+    }
+}
+
+fun <E> List<E>.permutationsSeq(): Sequence<List<E>> = sequence {
+    val arr = this@permutationsSeq.toMutableList()
+    val n = arr.size
+    val c = IntArray(n) { 0 }
+
+    yield(arr.toList())
+
+    var i = 0
+    while (i < n) {
+        if (c[i] < i) {
+            if (i % 2 == 0) {
+                arr[0] = arr[i].also { arr[i] = arr[0] }
+            } else {
+                arr[c[i]] = arr[i].also { arr[i] = arr[c[i]] }
+            }
+
+            yield(arr.toList())
+
+            c[i]++
+            i = 0
+        } else {
+            c[i] = 0
+            i++
+        }
+    }
+}
+
 
 /**
  * Returns the Cartesian product of the collection of collections.
@@ -48,7 +100,7 @@ fun <T> Collection<Collection<T>>.cartesianProduct(): List<List<T>> {
  * listOf(1, 2, 3, 4).combinations(2) == [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
  * ```
  */
-fun List<Int>.combinations(k: Int): List<List<Int>> {
+fun <T> Collection<T>.combinations(k: Int): List<List<T>> {
     if (k == 0) return listOf(emptyList())
     if (k > size) return emptyList()
     val x = drop(1).combinations(k - 1).map { it + first() }

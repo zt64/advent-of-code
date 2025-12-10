@@ -9,6 +9,23 @@ class Day09(input: String) : Day(input) {
 
     private val containedPoints = HashMap<Point2D, Boolean>()
 
+    init {
+        tiles.windowed(2).forEach { (p1, p2) ->
+            when {
+                p1.x == p2.x -> {
+                    val ys = p1.y.coerceAtMost(p2.y)..p1.y.coerceAtLeast(p2.y)
+                    for (y in ys) containedPoints[Point2D(p1.x, y)] = true
+                }
+                p1.y == p2.y -> {
+                    val xs = p1.x.coerceAtMost(p2.x)..p1.x.coerceAtLeast(p2.x)
+                    for (x in xs) containedPoints[Point2D(x, p1.y)] = true
+                }
+            }
+        }
+    }
+
+    private fun checkPoint(point: Point2D) = checkPoint(point.x, point.y)
+
     private fun checkPoint(x: Int, y: Int): Boolean {
         return containedPoints.getOrPut(Point2D(x, y)) {
             val px = x.toLong() + 1
@@ -46,23 +63,24 @@ class Day09(input: String) : Day(input) {
     override fun part2(): Any {
         return tiles.maxOf { start ->
             tiles.maxOf { end ->
-                val width = end.x - start.x.toLong() + 1
-                val height = end.y - start.y.toLong() + 1
-                var valid =  true
+                val Mx = maxOf(start.x, end.x)
+                val mx = minOf(start.x, end.x)
+                val My = maxOf(start.y, end.y)
+                val my = minOf(start.y, end.y)
 
-                for (x in start.x..end.x step 20) {
-                    if (!checkPoint(x, start.y)) { valid = false; break }
-                    if (start.y != end.y && !checkPoint(x, end.y)) { valid = false; break }
-                }
+                if (!checkPoint(mx, my)
+                    || !checkPoint(mx, My)
+                    || !checkPoint(Mx, my)
+                    || !checkPoint(Mx, My)
+                ) return@maxOf 0
 
-                if (valid) {
-                    for (y in (start.y + 1) until end.y step 20) {
-                        if (!checkPoint(start.x, y)) { valid = false; break }
-                        if (start.x != end.x && !checkPoint(end.x, y)) { valid = false; break }
-                    }
-                }
+                if ((mx..Mx step 1500).any { x -> !checkPoint(x, my) })
+                    return@maxOf 0
 
-                if (valid) width * height else 0
+                if ((my..My step 1500).any { y -> !checkPoint(mx, y) })
+                    return@maxOf 0
+
+                (Mx - mx.toLong() + 1) * (My - my.toLong() + 1)
             }
         }
     }
