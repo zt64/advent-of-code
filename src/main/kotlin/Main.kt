@@ -1,76 +1,70 @@
+
 import day.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.io.path.Path
+import kotlin.io.path.readText
 import kotlin.time.Duration
 import kotlin.time.measureTimedValue
 
 private const val YEAR = 2025
 
 private val days = listOf(
-    ::Day01,
-    ::Day02,
-    ::Day03,
-    ::Day04,
-    ::Day05,
-    ::Day06,
-    ::Day07,
-    ::Day08,
-    ::Day09,
-    ::Day10,
-    ::Day11,
-    ::Day12
+    ::Day01, ::Day02, ::Day03, ::Day04, ::Day05, ::Day06,
+    ::Day07, ::Day08, ::Day09, ::Day10, ::Day11, ::Day12
 )
 
 fun main(args: Array<String>) = runBlocking {
-    val calendar = Calendar.getInstance()
-
-    val dayIndex = if (calendar.get(Calendar.YEAR) == YEAR && args.isEmpty()) {
-        calendar.get(Calendar.DAY_OF_MONTH)
-    } else {
-        if (args.isEmpty()) {
-            println("Please provide a day number")
-            return@runBlocking
+    val dayIndex = if (args.isEmpty()) {
+        val calendar = Calendar.getInstance()
+        if (calendar.get(Calendar.YEAR) == YEAR) {
+            calendar.get(Calendar.DAY_OF_MONTH)
+        } else {
+            error("Please provide a day number")
         }
+    } else {
+        args.first().toIntOrNull()?.takeIf { it in 1..days.size }
+            ?: error("Invalid day: ${args.first()}")
+    }
 
-        args.first().toIntOrNull()
-    }?.takeIf { i -> i in 1..days.size } ?: error("Invalid day")
-
-    val dayConstructor = days.getOrNull(dayIndex - 1) ?: error("Day not found $dayIndex")
+    val dayConstructor = days.getOrNull(dayIndex - 1) ?: error("Day not found: $dayIndex")
+    val paddedDay = dayIndex.toString().padStart(2, '0')
 
     println("\n🎄 AOC $YEAR Day ${dayIndex.toString().padStart(2, '0')} 🎄")
     println("═".repeat(30))
     println()
 
     withContext(Dispatchers.IO) {
-        val paddedDay = dayIndex.toString().padStart(2, '0')
-        val exampleInput = Day01::class.java.getResource("/day/$paddedDay/example.txt")?.readText()
-
-        if (exampleInput != null) {
+        loadInput(paddedDay, "example.txt")?.let { exampleInput ->
             println("Example Input:")
-            val exampleDay = dayConstructor(exampleInput)
-            runPart(1, exampleDay::part1)
-            runPart(2, exampleDay::part2)
+            runDay(dayConstructor(exampleInput))
             println()
         }
 
         println("Real Input:")
-        val realInput = Day01::class.java.getResource("/day/$paddedDay/input.txt")?.readText()
-            ?: Day01::class.java.getResource("/day${paddedDay}.txt")?.readText()
+        val realInput = args.getOrNull(1)?.let { Path(it).readText() }
+            ?: loadInput(paddedDay, "input.txt")
             ?: error("Could not find input file for day $paddedDay")
 
-        val realDay = dayConstructor(realInput)
-        runPart(1, realDay::part1)
-        runPart(2, realDay::part2)
+        runDay(dayConstructor(realInput))
     }
 }
 
-private suspend fun CoroutineScope.runPart(partNumber: Int, solve: () -> Any) {
-    launch {
-        val (result, duration) = measureTimedValue(solve)
+private fun loadInput(paddedDay: String, filename: String): String? {
+    return Day::class.java.getResource("/day/$paddedDay/$filename")?.readText()
+}
 
-        val formattedDuration = duration.formatNicely()
-        println("\r* Part $partNumber (${formattedDuration.padStart(6)}): $result")
-    }.join()
+private fun runDay(day: Day) {
+    runPart(1, day::part1)
+    runPart(2, day::part2)
+}
+
+private fun runPart(partNumber: Int, solve: () -> Any) {
+    val (result, duration) = measureTimedValue(solve)
+    val formattedDuration = duration.formatNicely()
+    println("* Part $partNumber (${formattedDuration.padStart(6)}): $result")
 }
 
 private fun Duration.formatNicely(): String = when {
