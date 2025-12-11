@@ -33,11 +33,12 @@ fun <T> Collection<Collection<T>>.cartesianProductSeq(): Sequence<List<T>> = seq
         return@sequence
     }
 
-    val lists = this@cartesianProductSeq.toList()
+    val lists = this@cartesianProductSeq.map { it.toList() }
     val indices = IntArray(lists.size)
+    val result = MutableList(lists.size) { lists[it][0] }
 
     while (true) {
-        yield(lists.mapIndexed { i, list -> list.elementAt(indices[i]) })
+        yield(result.toList())
 
         var carry = lists.lastIndex
         while (carry >= 0 && ++indices[carry] == lists[carry].size) {
@@ -46,9 +47,12 @@ fun <T> Collection<Collection<T>>.cartesianProductSeq(): Sequence<List<T>> = seq
         }
 
         if (carry < 0) break
+
+        for (i in carry..lists.lastIndex) {
+            result[i] = lists[i][indices[i]]
+        }
     }
 }
-
 fun <E> List<E>.permutationsSeq(): Sequence<List<E>> = sequence {
     val arr = this@permutationsSeq.toMutableList()
     val n = arr.size

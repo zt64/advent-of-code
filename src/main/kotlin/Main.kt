@@ -57,8 +57,8 @@ private fun loadInput(paddedDay: String, filename: String): String? {
 }
 
 private fun runDay(day: Day) {
-    runPart(1, day::part1)
-    runPart(2, day::part2)
+    runPart(1) { day.part1() }
+    runPart(2) { day.part2() }
 }
 
 private fun runPart(partNumber: Int, solve: () -> Any) {
